@@ -111,9 +111,9 @@ const store = {
     timer.description = description;
     this.trigger();
   },
-  createTimer: function() {
+  createTimer: function(description) {
     const timer = {
-      description: '',
+      description,
       id: uuid(),
       runningSince: null,
       seconds: 0
@@ -155,14 +155,26 @@ actions.startTimer.listen(store.startTimer, store);
 actions.deleteTimer.listen(store.deleteTimer, store);
 
 // Components
-function NewTimerButton() {
+function onSubmitNewTimerForm(e) {
+  e.preventDefault();
+  const descriptionField = e.target.querySelector('input');
+  actions.createTimer(
+    descriptionField.value
+  );
+  descriptionField.value = '';
+}
+
+function NewTimerForm() {
   return (
-    <button 
-      className="new-timer-button"
-      onClick={() => actions.createTimer()}
-    >
-      + Timer
-    </button>
+    <form className="new-timer-form" onSubmit={onSubmitNewTimerForm}>
+      <input type="text" />
+      <button 
+        className="new-timer-button"
+        onClick={() => actions.createTimer()}
+      >
+        + Timer
+      </button>
+    </form>
   )
 }
 
@@ -249,7 +261,7 @@ class Increment extends React.Component {
   render() {
     return (
       <div>
-        <NewTimerButton />
+        <NewTimerForm />
         <TimerList timers={this.state.timers} />
       </div>
     )
