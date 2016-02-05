@@ -255,7 +255,6 @@ class Increment extends React.Component {
   }
 }
 
-
 const storageKey = 'increment.data';
 const previousData = window.localStorage.getItem(storageKey);
 if (previousData) {
