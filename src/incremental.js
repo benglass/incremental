@@ -148,18 +148,9 @@ actions.startTimer.listen(store.startTimer, store);
 actions.deleteTimer.listen(store.deleteTimer, store);
 
 // Components
-function onSubmitNewTimerForm(e) {
-  e.preventDefault();
-  const descriptionField = e.target.querySelector('input');
-  actions.createTimer(
-    descriptionField.value
-  );
-  descriptionField.value = '';
-}
-
-function NewTimerForm() {
+function NewTimerForm({onSubmit}) {
   return (
-    <form className="new-timer-form" onSubmit={onSubmitNewTimerForm}>
+    <form className="new-timer-form" onSubmit={onSubmit}>
       <input type="text" />
       <button className="new-timer-button">
         + Timer
@@ -235,6 +226,15 @@ function transformStoreToState(store) {
   };
 }
 
+function onSubmitNewTimerForm(e) {
+  e.preventDefault();
+  const descriptionField = e.target.querySelector('input');
+  actions.createTimer(
+    descriptionField.value
+  );
+  descriptionField.value = '';
+}
+
 class Increment extends React.Component {
   constructor(props) {
     super(props);
@@ -251,7 +251,7 @@ class Increment extends React.Component {
   render() {
     return (
       <div>
-        <NewTimerForm />
+        <NewTimerForm onSubmit={onSubmitNewTimerForm} />
         <TimerList timers={this.state.timers} />
       </div>
     )
