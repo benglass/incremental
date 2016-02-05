@@ -71,6 +71,7 @@ var actions = {
   startTimer: createAction(),
   deleteTimer: createAction(),
   deleteAllTimers: createAction(),
+  keyup: createAction(),
 };
 
 // Store
@@ -283,6 +284,41 @@ function onSubmitNewTimerForm(e) {
   );
   descriptionField.value = '';
 }
+
+const _MAP = {
+  27: 'esc',
+  13: 'enter',
+}
+
+document.addEventListener('keyup', function(e) {
+  const element = e.target;
+
+  if (element.tagName == 'INPUT' || element.tagName == 'SELECT' || element.tagName == 'TEXTAREA' || element.isContentEditable) {
+    return;
+  }
+
+  // normalize e.which for key events
+  // @see http://stackoverflow.com/questions/4285627/javascript-keycode-vs-charcode-utter-confusion
+  if (typeof e.which !== 'number') {
+    e.which = e.keyCode;
+  }
+
+  let character = '';
+  if (_MAP[e.which]) {
+    character = _MAP[e.which];
+  } else {
+    character = String.fromCharCode(e.which)
+    if (!e.shiftKey) {
+      character = character.toLowerCase();
+    }
+  }
+
+  actions.keyup(character);
+});
+
+actions.keyup.listen(function(character) {
+  console.log(character);
+});
 
 class Increment extends React.Component {
   constructor(props) {
