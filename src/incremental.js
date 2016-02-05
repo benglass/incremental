@@ -290,6 +290,8 @@ const _MAP = {
   13: 'enter',
 }
 
+let shortcutTimeout;
+let shortcutTimeoutDelay = 2000;
 document.addEventListener('keyup', function(e) {
   const element = e.target;
 
@@ -314,6 +316,11 @@ document.addEventListener('keyup', function(e) {
   }
 
   actions.keyup(character);
+
+  clearTimeout(shortcutTimeout);
+  shortcutTimeout = setTimeout(function() {
+    console.log('forg it');
+  }, shortcutTimeoutDelay);
 });
 
 actions.keyup.listen(function(character) {
