@@ -75,13 +75,15 @@ var actions = {
 // Store
 const store = {
   data: {
-    timers: [],
+    timerIds: [],
+    timersById: {},
     currentTimerId: null,
   },
   getTimerById(id) {
-    return this.data.timers.filter(function(timer) {
-      return timer.id === id;
-    })[0];
+    return this.data.timersById[id];
+  },
+  getTimers() {
+    return this.data.timerIds.map(this.getTimerById, this);
   },
   toggleTimerRunning: function(id) {
     const timer = this.getTimerById(id);
@@ -103,7 +105,8 @@ const store = {
       runningSince: null,
       seconds: 0
     };
-    this.data.timers = [timer].concat(this.data.timers);
+    this.data.timerIds = [timer.id].concat(this.data.timerIds);
+    this.data.timersById[timer.id] = timer;
     this.startTimer(timer.id);
     this.trigger();
   },
@@ -118,16 +121,16 @@ const store = {
   },
   startTimer: function(id) {
     const timer = this.getTimerById(id);
-    this.data.timers.forEach(t => {
-      this.stopTimer(t.id);
+    this.data.timerIds.forEach(id => {
+      this.stopTimer(id);
     });
     this.data.currentTimerId = id;
     timer.runningSince = now();
     this.trigger();
   },
-  deleteTimer: function(id) {
-    this.data.timers = this.data.timers.filter(function(timer) {
-      return timer.id !== id;
+  deleteTimer: function(idToDelete) {
+    this.data.timerIds = this.data.timerIds.filter(function(id) {
+      return id !== idToDelete;
     });
     this.trigger();
   },
@@ -216,7 +219,7 @@ function TimerList({timers}) {
 
 function transformStoreToState(store) {
   return {
-    timers: store.data.timers
+    timers: store.getTimers()
   };
 }
 
