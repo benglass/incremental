@@ -119,6 +119,7 @@ const store = {
       seconds: 0
     };
     this.data.timers = [timer].concat(this.data.timers);
+    this.startTimer(timer.id);
     this.trigger();
   },
   stopTimer: function(id) {
