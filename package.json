@@ -1,0 +1,19 @@
+{
+  "name": "incremental",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "babel src -d public_html/js",
+    "build:watch": "babel --watch src -d public_html/js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel": "^6.3.26",
+    "babel-cli": "^6.4.5",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.3.13",
+    "watch": "^0.17.1"
+  }
+}
