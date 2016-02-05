@@ -64,6 +64,7 @@ function createAction() {
 }
 
 var actions = {
+  toggleCurrentTimerRunning: createAction(),
   toggleTimerRunning: createAction(),
   updateTimerDescription: createAction(),
   createTimer: createAction(),
@@ -71,8 +72,13 @@ var actions = {
   startTimer: createAction(),
   deleteTimer: createAction(),
   deleteAllTimers: createAction(),
-  keyup: createAction(),
+  shortcutKey: createAction(),
+  clearShortcut: createAction(),
 };
+
+const keyboardShortcuts = {
+  'enter': actions.toggleCurrentTimerRunning
+}
 
 // Store
 const store = {
@@ -80,12 +86,19 @@ const store = {
     timerIds: [],
     timersById: {},
     currentTimerId: null,
+    pendingShortcut: '',
   },
   getTimerById(id) {
     return this.data.timersById[id];
   },
   getTimers() {
     return this.data.timerIds.map(this.getTimerById, this);
+  },
+  toggleCurrentTimerRunning() {
+    if (!this.data.currentTimerId) {
+      return;
+    }
+    this.toggleTimerRunning(this.data.currentTimerId);
   },
   toggleTimerRunning: function(id) {
     const timer = this.getTimerById(id);
@@ -141,9 +154,22 @@ const store = {
     this.data.timersById = {};
     this.trigger();
   },
+  shortcutKey: function(character) {
+    this.data.pendingShortcut += character;
+    if (keyboardShortcuts[this.data.pendingShortcut]) {
+      keyboardShortcuts[this.data.pendingShortcut]();
+      this.data.pendingShortcut = '';
+    }
+    this.trigger();
+  },
+  clearShortcut: function(character) {
+    this.data.pendingShortcut = '';
+    this.trigger();
+  },
 };
 Object.assign(store, publisherMethods);
 
+actions.toggleCurrentTimerRunning.listen(store.toggleCurrentTimerRunning, store);
 actions.toggleTimerRunning.listen(store.toggleTimerRunning, store);
 actions.updateTimerDescription.listen(store.updateTimerDescription, store);
 actions.createTimer.listen(store.createTimer, store);
@@ -151,6 +177,8 @@ actions.stopTimer.listen(store.stopTimer, store);
 actions.startTimer.listen(store.startTimer, store);
 actions.deleteTimer.listen(store.deleteTimer, store);
 actions.deleteAllTimers.listen(store.deleteAllTimers, store);
+actions.shortcutKey.listen(store.shortcutKey, store);
+actions.clearShortcut.listen(store.clearShortcut, store);
 
 // Components
 function NewTimerForm({onSubmit}) {
@@ -315,16 +343,10 @@ document.addEventListener('keyup', function(e) {
     }
   }
 
-  actions.keyup(character);
+  actions.shortcutKey(character);
 
   clearTimeout(shortcutTimeout);
-  shortcutTimeout = setTimeout(function() {
-    console.log('forg it');
-  }, shortcutTimeoutDelay);
-});
-
-actions.keyup.listen(function(character) {
-  console.log(character);
+  shortcutTimeout = setTimeout(actions.clearShortcut, shortcutTimeoutDelay);
 });
 
 class Increment extends React.Component {
