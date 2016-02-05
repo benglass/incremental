@@ -72,14 +72,6 @@ var actions = {
   deleteTimer: createAction(),
 };
 
-/*
-function updateTimerDescription(id, description) {
-  const timer = store.getTimerById(id);
-  timer.description = description;
-  store.trigger();
-}
-*/
-
 // Store
 const store = {
   subscribers: [],
