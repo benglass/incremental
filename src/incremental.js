@@ -180,7 +180,9 @@ class ConfirmButton extends React.Component {
     }
   }
 
-  handleCancel() {
+  handleCancel(e) {
+    e.preventDefault();
+    e.stopPropagation();
     this.setState({ isPending: false });
   }
 
@@ -191,7 +193,7 @@ class ConfirmButton extends React.Component {
         onClick={this.handleClick.bind(this)}
       >
       {this.state.isPending ? this.props.confirmText : this.props.text}
-      {this.state.isPending ? <span onClick={this.handleCancel.bind(this)}>Cancel</span> : null}
+      {this.state.isPending ? <span> or <span onClick={this.handleCancel.bind(this)}>Cancel</span></span> : null}
       </button>
     )
   }
@@ -210,7 +212,7 @@ function DeleteAllTimersButton() {
 function DeleteTimerButton({id}) {
   return (
     <ConfirmButton
-      onClick={() => actions.deleteTimer()}
+      onClick={() => actions.deleteTimer(id)}
       text="Delete"
       confirmText="Confirm"
     />
