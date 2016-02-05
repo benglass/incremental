@@ -51,7 +51,8 @@ button {
   background: rgb(0, 200, 25);
 }
 
-.delete-timer-button {
+.delete-timer-button,
+.delete-all-timers-button {
   background: rgb(255, 110, 110);
 }
 

@@ -70,6 +70,7 @@ var actions = {
   stopTimer: createAction(),
   startTimer: createAction(),
   deleteTimer: createAction(),
+  deleteAllTimers: createAction(),
 };
 
 // Store
@@ -134,6 +135,11 @@ const store = {
     });
     this.trigger();
   },
+  deleteAllTimers: function() {
+    this.data.timerIds = [];
+    this.data.timersById = {};
+    this.trigger();
+  },
 };
 Object.assign(store, publisherMethods);
 
@@ -143,6 +149,7 @@ actions.createTimer.listen(store.createTimer, store);
 actions.stopTimer.listen(store.stopTimer, store);
 actions.startTimer.listen(store.startTimer, store);
 actions.deleteTimer.listen(store.deleteTimer, store);
+actions.deleteAllTimers.listen(store.deleteAllTimers, store);
 
 // Components
 function NewTimerForm({onSubmit}) {
@@ -153,6 +160,17 @@ function NewTimerForm({onSubmit}) {
         + Timer
       </button>
     </form>
+  )
+}
+
+function DeleteAllTimersButton() {
+  return (
+    <button 
+      className="delete-all-timers-button"
+      onClick={() => actions.deleteAllTimers()}
+    >
+      Delete All
+    </button>
   )
 }
 
@@ -249,6 +267,7 @@ class Increment extends React.Component {
     return (
       <div>
         <NewTimerForm onSubmit={onSubmitNewTimerForm} />
+        <DeleteAllTimersButton />
         <TimerList timers={this.state.timers} />
       </div>
     )
