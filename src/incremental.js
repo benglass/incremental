@@ -74,13 +74,6 @@ var actions = {
 
 // Store
 const store = {
-  subscribers: [],
-  listen: function(subscriber) {
-    this.subscribers.push(subscriber);
-  },
-  trigger: function(data) {
-    this.subscribers.forEach(subscriber => subscriber(data));
-  },
   data: {
     timers: [],
     currentTimerId: null,
@@ -139,6 +132,7 @@ const store = {
     this.trigger();
   },
 };
+Object.assign(store, publisherMethods);
 
 actions.toggleTimerRunning.listen(store.toggleTimerRunning, store);
 actions.updateTimerDescription.listen(store.updateTimerDescription, store);
