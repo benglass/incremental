@@ -163,14 +163,42 @@ function NewTimerForm({onSubmit}) {
   )
 }
 
+class ConfirmButton extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isPending: false
+    };
+  }
+
+  handleClick() {
+    if (this.state.isPending) {
+      this.props.onClick();
+      this.setState({ isPending: false });
+    } else {
+      this.setState({ isPending: true });
+    }
+  }
+
+  render() {
+    return (
+      <button 
+        className="confirm-button"
+        onClick={this.handleClick.bind(this)}
+      >
+      {this.state.isPending ? this.props.confirmText : this.props.text}
+      </button>
+    )
+  }
+}
+
 function DeleteAllTimersButton() {
   return (
-    <button 
-      className="delete-all-timers-button"
+    <ConfirmButton
       onClick={() => actions.deleteAllTimers()}
-    >
-      Delete All
-    </button>
+      text="Delete All"
+      confirmText="Confirm"
+    />
   )
 }
 
