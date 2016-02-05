@@ -168,10 +168,7 @@ function NewTimerForm() {
   return (
     <form className="new-timer-form" onSubmit={onSubmitNewTimerForm}>
       <input type="text" />
-      <button 
-        className="new-timer-button"
-        onClick={() => actions.createTimer()}
-      >
+      <button className="new-timer-button">
         + Timer
       </button>
     </form>
